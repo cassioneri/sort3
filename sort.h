@@ -1,0 +1,144 @@
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-FileCopyrightText: 2023 Cassio Neri <cassio.neri@gmail.com>
+//
+// This code is a supplementary material to:
+//
+//     Neri C, "Shorter and faster than Sort3AlphaDev", to appear.
+
+#include <cstdint>
+
+#if defined(__clang__)
+
+// Original Sort3AlphaDev from [1].
+// [1] https://github.com/deepmind/alphadev/blob/1a6eac1544c1075ef27814f09f9223cb84537c59/sort_functions_test.cc#L23
+void Sort3AlphaDev(int* buffer) {
+  asm volatile(
+      "mov 0x4(%0), %%eax            \n"
+      "mov 0x8(%0), %%ecx            \n"
+      "cmp %%eax, %%ecx              \n"
+      "mov %%eax, %%edx              \n"
+      "cmovl %%ecx, %%edx            \n"
+      "mov (%0), %%r8d               \n"
+      "cmovg %%ecx, %%eax            \n"
+      "cmp %%r8d, %%eax              \n"
+      "mov %%r8d, %%ecx              \n"
+      "cmovl %%eax, %%ecx            \n"
+      "cmovle %%r8d, %%eax           \n"
+      "mov %%eax, 0x8(%0)            \n"
+      "cmp %%ecx, %%edx              \n"
+      "cmovle %%edx, %%r8d           \n"
+      "mov %%r8d, (%0)               \n"
+      "cmovg %%edx, %%ecx            \n"
+      "mov %%ecx, 0x4(%0)            \n"
+      : "+r"(buffer)
+      :
+      : "eax", "ecx", "edx", "r8d", "memory");
+}
+
+#else
+
+// Adapted from [1] for gcc. ("rd8" is replaced with "esi" for the compilation to succeed.)
+void Sort3AlphaDev(int* buffer) {
+  asm volatile(
+      "mov 0x4(%0), %%eax            \n"
+      "mov 0x8(%0), %%ecx            \n"
+      "cmp %%eax, %%ecx              \n"
+      "mov %%eax, %%edx              \n"
+      "cmovl %%ecx, %%edx            \n"
+      "mov (%0), %%esi               \n"
+      "cmovg %%ecx, %%eax            \n"
+      "cmp %%esi, %%eax              \n"
+      "mov %%esi, %%ecx              \n"
+      "cmovl %%eax, %%ecx            \n"
+      "cmovle %%esi, %%eax           \n"
+      "mov %%eax, 0x8(%0)            \n"
+      "cmp %%ecx, %%edx              \n"
+      "cmovle %%edx, %%esi           \n"
+      "mov %%esi, (%0)               \n"
+      "cmovg %%edx, %%ecx            \n"
+      "mov %%ecx, 0x4(%0)            \n"
+      : "+r"(buffer)
+      :
+      : "eax", "ecx", "edx", "esi", "memory");
+}
+#endif
+
+void Sort3_14(int* buffer) {
+  int a, b, c;
+  asm volatile (
+    "mov (%[p]), %[a]           \n\t" // int a = *p;
+    "mov 4(%[p]), %[b]          \n\t" // int b = *(p + 1);
+    "loop_start%=:              \n\t" // for(;;) {
+    "mov %[a], %[c]             \n\t" //   int c = a;
+    "cmp %[b], %[a]             \n\t" //   bool flag = b < a;
+    "cmovg %[b], %[a]           \n\t" //   a = flag ? b : a;
+    "cmovg %[c], %[b]           \n\t" //   b = flag ? c : b;
+    "cmp 8(%[p]), %[b]          \n\t" //   flag = *(p + 2) < b;
+    "jle loop_end%=             \n\t" //   if (!flag) break;
+    "mov %[b], %[c]             \n\t" //   c = b;
+    "mov 8(%[p]), %[b]          \n\t" //   b = *(p + 2);
+    "mov %[c], 8(%[p])          \n\t" //   *(p + 2) = c;
+    "jmp loop_start%=           \n\t" // }
+    "loop_end%=:                \n\t" //
+    "mov %[a], (%[p])           \n\t" // *p = a;
+    "mov %[b], 4(%[p])              " // *(p + 1) = b;
+    : [a]"=r"(a), [b]"=r"(b), [c]"=r"(c), [p]"+r"(buffer)
+    : : "memory");
+}
+
+char dest[] = {
+  1, 2, 9, 2, 0, 9, 0, 1,
+  0, 0, 9, 1, 1, 9, 2, 2,
+  2, 1, 9, 0, 2, 9, 1, 0
+};
+
+void Sort3_15(int* buffer) {
+  int a, b, c;
+  int64_t i, j;
+  asm volatile (
+    "mov (%[p]), %[a]           \n\t" // int a = p[0];
+    "mov 4(%[p]), %[b]          \n\t" // int b = p[1];
+    "mov 8(%[p]), %[c]          \n\t" // int c = p[2];
+    "cmp %[a], %[b]             \n\t" // int flag = b < a;
+    "sbb %[i], %[i]             \n\t" // int i = flag ? -1 : 0;
+    "cmp %[b], %[c]             \n\t" // flag = c < b;
+    "adc %[i], %[i]             \n\t" // i = 2 * i + flag;
+    "cmp %[a], %[c]             \n\t" // flag = c < a;
+    "adc %[i], %[i]             \n\t" // i = 2 * i + flag;
+    "movsb dest+4(%[i]), %[j]   \n\t" // int j = dest[i + 4];
+    "mov %[a], (%[p],%[j],4)    \n\t" // p[j] = a;
+    "movsb dest+12(%[i]), %[j]  \n\t" // j = dest[i + 12];
+    "mov %[b], (%[p],%[j],4)    \n\t" // p[j] = b;
+    "movsb dest+20(%[i]), %[j]  \n\t" // j = dest[i + 20];
+    "mov %[c], (%[p],%[j],4)        " // p[j] = c;
+    : [a]"=r"(a), [b]"=r"(b), [c]"=r"(c), [i]"=r"(i), [j]"=r"(j),
+    [p]"+r"(buffer) : "g"(dest) : "memory");
+  return;
+}
+
+void Sort3_faster(int* buffer) {
+
+  int a = buffer[0];
+  int b = buffer[1];
+  int c = buffer[2];
+
+  bool flag = c < b;
+  int d = b;
+  b = flag ? c : b;
+  c = flag ? d : c;
+
+  flag = c < a;
+  d = a;
+  a = flag ? c : a;
+  c = flag ? d : c;
+  buffer[2] = c;
+
+  flag = b < a;
+  d = a;
+  a = flag ? b : a;
+  b = flag ? d : b;
+  buffer[0] = a;
+  buffer[1] = b;
+
+  return;
+}

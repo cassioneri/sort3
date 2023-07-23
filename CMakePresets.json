@@ -1,0 +1,120 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 1,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+    {
+      "name": "clang",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release-symbols",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "ninja",
+      "hidden": true,
+      "generator": "Ninja"
+    },
+    {
+      "name": "make",
+      "hidden": true,
+      "generator": "Unix Makefiles"
+    },
+    {
+      "name": "clang.debug.make",
+      "description": "Clang debug build using Make",
+      "inherits": [ "clang", "debug", "make", "base" ]
+    },
+    {
+      "name": "clang.debug.ninja",
+      "description": "Clang debug build using Ninja",
+      "inherits": [ "clang", "debug", "ninja", "base" ]
+    },
+    {
+      "name": "clang.release.make",
+      "description": "Clang release build using Make",
+      "inherits": [ "clang", "release", "make", "base" ]
+    },
+    {
+      "name": "clang.release.ninja",
+      "description": "Clang release build using Ninja",
+      "inherits": [ "clang", "release", "ninja", "base" ]
+    },
+    {
+      "name": "clang.release-symbols.make",
+      "description": "Clang release with symbols build using Make",
+      "inherits": [ "clang", "release-symbols", "make", "base" ]
+    },
+    {
+      "name": "clang.release-symbols.ninja",
+      "description": "Clang release with symbols build using Ninja",
+      "inherits": [ "clang", "release-symbols", "ninja", "base" ]
+    },
+    {
+      "name": "gcc.debug.make",
+      "description": "GCC debug build using Make",
+      "inherits": [ "gcc", "debug", "make", "base" ]
+    },
+    {
+      "name": "gcc.debug.ninja",
+      "description": "GCC debug build using Ninja",
+      "inherits": [ "gcc", "debug", "ninja", "base" ]
+    },
+    {
+      "name": "gcc.release.make",
+      "description": "GCC release build using Make",
+      "inherits": [ "gcc", "release", "make", "base" ]
+    },
+    {
+      "name": "gcc.release.ninja",
+      "description": "GCC release build using Ninja",
+      "inherits": [ "gcc", "release", "ninja", "base" ]
+    },
+    {
+      "name": "gcc.release-symbols.make",
+      "description": "GCC release with symbols build using Make",
+      "inherits": [ "gcc", "release-symbols", "make", "base" ]
+    },
+    {
+      "name": "gcc.release-symbols.ninja",
+      "description": "GCC release with symbols build using Ninja",
+      "inherits": [ "gcc", "release-symbols", "ninja", "base" ]
+    }
+  ]
+}
