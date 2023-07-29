@@ -12,12 +12,12 @@
 #include "sort.h"
 
 #include <array>
-#include <cassert>
 #include <cstdint>
 #include <cstdio>
 
-// Function main() exhaustively tests all flavours of sort3.
-int main() {
+void test(void (*function)(int*), char const* name) {
+
+  std::printf("Testing %s...\n", name);
 
   using test_case_t = std::array<int , 3>;
 
@@ -40,28 +40,20 @@ int main() {
 
   for (auto& test_case : test_cases) {
     test_case_t const& expected = test_case[1];
-    {
-      test_case_t actual = test_case[0];
-      Sort3AlphaDev(actual.data());
-      assert(actual[0] == expected[0] && actual[1] == expected[1] && actual[2] == expected[2] &&
-        "Sort3AlphaDev failed.");
-    }{
-      test_case_t actual = test_case[0];
-      Sort3_14(actual.data());
-      assert(actual[0] == expected[0] && actual[1] == expected[1] && actual[2] == expected[2] &&
-        "Sort3_14 failed.");
-    }{
-      test_case_t actual = test_case[0];
-      Sort3_15(actual.data());
-      assert(actual[0] == expected[0] && actual[1] == expected[1] && actual[2] == expected[2] &&
-        "Sort3_15 failed.");
-    }{
-      test_case_t actual = test_case[0];
-      Sort3_faster(actual.data());
-      assert(actual[0] == expected[0] && actual[1] == expected[1] && actual[2] == expected[2] &&
-        "Sort3_faster failed.");
+    test_case_t actual = test_case[0];
+    function(actual.data());
+    if (actual[0] != expected[0] || actual[1] != expected[1] || actual[2] != expected[2]) {
+      std::puts("  FAIL");
+      return;
     }
   }
+  std::puts("  PASS");
+}
 
-  std::puts("Tests pass.");
+// Function main() exhaustively tests all flavours of sort3.
+int main() {
+  test(Sort3AlphaDev, "Sort3AlphaDev");
+  test(Sort3_14     , "Sort3_14"     );
+  test(Sort3_15     , "Sort3_15"     );
+  test(Sort3_faster , "Sort3_faster" );
 }
