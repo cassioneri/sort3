@@ -3,12 +3,13 @@
 This repository contains the supplementary material to:
 
 Neri, C. "Shorter and faster than *Sort3AlphaDev*", to appear.
+([Preprint](https://arxiv.org/abs/2307.14503).)
 
 ## Introduction
 
 The following DeepMind's work
 
-> Mankowitz, D.J., Michi, A., Zhernov, A. et al. "Faster sorting algorithms
+Mankowitz, D.J., Michi, A., Zhernov, A. et al. "Faster sorting algorithms
 discovered using deep reinforcement learning." Nature 618, 257–263 (2023).
 doi.org/10.1038/s41586-023-06004-9
 
@@ -18,7 +19,8 @@ numbers, the published implementation contains 17 assembly instructions, and
 the authors state that no shorter program exists. However, the following
 response:
 
-> Neri,  C."Shorter and faster than *Sort3AlphaDev*", to appear
+Neri, C. "Shorter and faster than *Sort3AlphaDev*", to appear.
+([Preprint](https://arxiv.org/abs/2307.14503).)
 
 presents two counterexamples for this claim and a straightforward C/C++
 implementation that is faster than DeepMind's.
@@ -28,7 +30,7 @@ implementation that is faster than DeepMind's.
 **[Building with CMake](#building-with-cmake)**<br>
 
   * **[Command line](#command-line)**
-  * **[Visual Studio Code](#visual-studio-ide)**
+  * **[Visual Studio Code](#visual-studio-code)**
 
 **[Executables](#executables)**<br>
 **[Dependencies](#dependencies)**<br>
