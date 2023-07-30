@@ -3,7 +3,8 @@
 //
 // This code is a supplementary material to:
 //
-//     Neri C, "Shorter and faster than Sort3AlphaDev", to appear.
+//     Neri, C. "Shorter and faster than Sort3AlphaDev", to appear.
+//     Preprint: https://arxiv.org/abs/2307.14503.
 
 #include "sort.h"
 
