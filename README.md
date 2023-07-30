@@ -27,6 +27,8 @@ implementation that is faster than DeepMind's.
 
 ## Table of Contents
 
+**[Errata](#errata)**<br>
+**[Live tests and benchmarks](#live-tests-and-benchmarks)**<br>
 **[Building with CMake](#building-with-cmake)**<br>
 
   * **[Command line](#command-line)**
@@ -34,6 +36,15 @@ implementation that is faster than DeepMind's.
 
 **[Executables](#executables)**<br>
 **[Dependencies](#dependencies)**<br>
+
+# Errata
+
+1. The preprint fails to mention that *Sort_15* only works for non-negative numbers,
+so the following sentence must be added at the end of section "Shorter than
+*Sort3AlphaDev*".
+
+> Unfortunately, *Sort_15* imposes the extra condition that the three numbers are
+> non-negative.
 
 # Live tests and benchmarks
 
