@@ -67,22 +67,22 @@ void Sort3AlphaDev(int* buffer) {
 void Sort3_14(int* buffer) {
   int a, b, c;
   asm volatile (
-    "mov (%[p]), %[a]           \n\t" // int a = *p;
-    "mov 4(%[p]), %[b]          \n\t" // int b = *(p + 1);
+    "mov (%[p]), %[a]           \n\t" // int a = buffer[0];
+    "mov 4(%[p]), %[b]          \n\t" // int b = buffer[1];
     "loop_start%=:              \n\t" // for(;;) {
     "mov %[a], %[c]             \n\t" //   int c = a;
     "cmp %[b], %[a]             \n\t" //   bool flag = b < a;
     "cmovg %[b], %[a]           \n\t" //   a = flag ? b : a;
     "cmovg %[c], %[b]           \n\t" //   b = flag ? c : b;
-    "cmp 8(%[p]), %[b]          \n\t" //   flag = *(p + 2) < b;
+    "cmp 8(%[p]), %[b]          \n\t" //   flag = buffer[2] < b;
     "jle loop_end%=             \n\t" //   if (!flag) break;
     "mov %[b], %[c]             \n\t" //   c = b;
-    "mov 8(%[p]), %[b]          \n\t" //   b = *(p + 2);
-    "mov %[c], 8(%[p])          \n\t" //   *(p + 2) = c;
+    "mov 8(%[p]), %[b]          \n\t" //   b = buffer[2];
+    "mov %[c], 8(%[p])          \n\t" //   buffer[2] = c;
     "jmp loop_start%=           \n\t" // }
     "loop_end%=:                \n\t" //
-    "mov %[a], (%[p])           \n\t" // *p = a;
-    "mov %[b], 4(%[p])              " // *(p + 1) = b;
+    "mov %[a], (%[p])           \n\t" // buffer[0] = a;
+    "mov %[b], 4(%[p])              " // buffer[1] = b;
     : [a]"=r"(a), [b]"=r"(b), [c]"=r"(c), [p]"+r"(buffer)
     : : "memory");
 }
@@ -97,9 +97,9 @@ void Sort3_15(int* buffer) {
   int a, b, c;
   int64_t i, j;
   asm volatile (
-    "mov (%[p]), %[a]           \n\t" // int a = p[0];
-    "mov 4(%[p]), %[b]          \n\t" // int b = p[1];
-    "mov 8(%[p]), %[c]          \n\t" // int c = p[2];
+    "mov (%[p]), %[a]           \n\t" // int a = buffer[0];
+    "mov 4(%[p]), %[b]          \n\t" // int b = buffer[1];
+    "mov 8(%[p]), %[c]          \n\t" // int c = buffer[2];
     "cmp %[a], %[b]             \n\t" // int flag = b < a;
     "sbb %[i], %[i]             \n\t" // int i = flag ? -1 : 0;
     "cmp %[b], %[c]             \n\t" // flag = c < b;
@@ -107,11 +107,11 @@ void Sort3_15(int* buffer) {
     "cmp %[a], %[c]             \n\t" // flag = c < a;
     "adc %[i], %[i]             \n\t" // i = 2 * i + flag;
     "movsb dest+4(%[i]), %[j]   \n\t" // int j = dest[i + 4];
-    "mov %[a], (%[p],%[j],4)    \n\t" // p[j] = a;
+    "mov %[a], (%[p],%[j],4)    \n\t" // buffer[j] = a;
     "movsb dest+12(%[i]), %[j]  \n\t" // j = dest[i + 12];
-    "mov %[b], (%[p],%[j],4)    \n\t" // p[j] = b;
+    "mov %[b], (%[p],%[j],4)    \n\t" // buffer[j] = b;
     "movsb dest+20(%[i]), %[j]  \n\t" // j = dest[i + 20];
-    "mov %[c], (%[p],%[j],4)        " // p[j] = c;
+    "mov %[c], (%[p],%[j],4)        " // buffer[j] = c;
     : [a]"=r"(a), [b]"=r"(b), [c]"=r"(c), [i]"=r"(i), [j]"=r"(j),
     [p]"+r"(buffer) : "g"(dest) : "memory");
   return;
