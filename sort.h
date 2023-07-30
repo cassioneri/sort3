@@ -101,7 +101,7 @@ void Sort3_15(int* buffer) {
     "mov (%[p]), %[a]           \n\t" // int a = buffer[0];
     "mov 4(%[p]), %[b]          \n\t" // int b = buffer[1];
     "mov 8(%[p]), %[c]          \n\t" // int c = buffer[2];
-    "cmp %[a], %[b]             \n\t" // int flag = b < a;
+    "cmp %[a], %[b]             \n\t" // bool flag = b < a;
     "sbb %[i], %[i]             \n\t" // int i = flag ? -1 : 0;
     "cmp %[b], %[c]             \n\t" // flag = c < b;
     "adc %[i], %[i]             \n\t" // i = 2 * i + flag;
