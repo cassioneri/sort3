@@ -118,6 +118,33 @@ void Sort3_15(int* buffer) {
   return;
 }
 
+// Precondition: *buffer[0] >= 0 && *buffer[1] >= 0 && *buffer[2] >= 0.
+// Faster than the Sort3_15, this implementation also does not use a look-up
+// table and thus, compiler switches "-fno-pie -no-pie" are unnecessary.
+void Sort3_15_v2(int* buffer) {
+  int a, b, c;
+  int i, j;
+  asm volatile (
+    "mov (%[p]), %[a]         \n\t" // int a = buffer[0];
+    "mov 4(%[p]), %[b]        \n\t" // int b = buffer[1];
+    "mov 8(%[p]), %[c]        \n\t" // int c = buffer[2];
+    "cmp %[a], %[b]           \n\t" // int flag = b < a;
+    "sbb %[j], %[j]           \n\t" // int j = -flag;       // = - (b < a)
+    "imul $-1, %[j], %[i]     \n\t" // int i = -j;          // = (b < a)
+    "cmp %[a], %[c]           \n\t" // flag = c < a;
+    "adc $0, %[i]             \n\t" // i = i + (0 + flag);  // = (b < a) + (c < a)
+    "mov %[a], (%[p],%q[i],4) \n\t" // buffer[i] = a;
+    "cmp %[c], %[b]           \n\t" // flag = b < c;
+    "sbb $-2, %[j]            \n\t" // j = j - (-2 + flag); // = 2 - (b < a) - (b < c) = (a <= b) + (c <= b)
+    "mov %[b], (%[p],%q[j],4) \n\t" // buffer[j] = b;
+    "add %[j], %[i]           \n\t" // i = i + j;
+    "xor $3, %[i]             \n\t" // i = 3 - i;
+    "mov %[c], (%[p],%q[i],4)     " // buffer[i] = c;
+    : [a]"=r"(a), [b]"=r"(b), [c]"=r"(c), [i]"=r"(i), [j]"=r"(j),
+    [p]"+r"(buffer) : : "memory");
+  return;
+}
+
 void Sort3_faster(int* buffer) {
 
   int a = buffer[0];

@@ -56,5 +56,6 @@ int main() {
   test(Sort3AlphaDev, "Sort3AlphaDev");
   test(Sort3_14     , "Sort3_14"     );
   test(Sort3_15     , "Sort3_15"     );
+  test(Sort3_15_v2  , "Sort3_15_v2"  );
   test(Sort3_faster , "Sort3_faster" );
 }
