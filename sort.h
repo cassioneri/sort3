@@ -123,7 +123,7 @@ void Sort3_15(int* buffer) {
 // table and thus, compiler switches "-fno-pie -no-pie" are unnecessary.
 void Sort3_15_v2(int* buffer) {
   int a, b, c;
-  int i, j;
+  int64_t i, j;
   asm volatile (
     "mov (%[p]), %[a]         \n\t" // int a = buffer[0];
     "mov 4(%[p]), %[b]        \n\t" // int b = buffer[1];
@@ -133,13 +133,13 @@ void Sort3_15_v2(int* buffer) {
     "imul $-1, %[j], %[i]     \n\t" // int i = -j;          // = (b < a)
     "cmp %[a], %[c]           \n\t" // flag = c < a;
     "adc $0, %[i]             \n\t" // i = i + (0 + flag);  // = (b < a) + (c < a)
-    "mov %[a], (%[p],%q[i],4) \n\t" // buffer[i] = a;
+    "mov %[a], (%[p],%[i],4)  \n\t" // buffer[i] = a;
     "cmp %[c], %[b]           \n\t" // flag = b < c;
     "sbb $-2, %[j]            \n\t" // j = j - (-2 + flag); // = 2 - (b < a) - (b < c) = (a <= b) + (c <= b)
-    "mov %[b], (%[p],%q[j],4) \n\t" // buffer[j] = b;
+    "mov %[b], (%[p],%[j],4)  \n\t" // buffer[j] = b;
     "add %[j], %[i]           \n\t" // i = i + j;
     "xor $3, %[i]             \n\t" // i = 3 - i;
-    "mov %[c], (%[p],%q[i],4)     " // buffer[i] = c;
+    "mov %[c], (%[p],%[i],4)      " // buffer[i] = c;
     : [a]"=r"(a), [b]"=r"(b), [c]"=r"(c), [i]"=r"(i), [j]"=r"(j),
     [p]"+r"(buffer) : : "memory");
   return;
