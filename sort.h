@@ -130,7 +130,7 @@ void Sort3_15_v2(int* buffer) {
     "mov 8(%[p]), %[c]        \n\t" // int c = buffer[2];
     "cmp %[a], %[b]           \n\t" // int flag = b < a;
     "sbb %[j], %[j]           \n\t" // int j = -flag;       // = - (b < a)
-    "imul $-1, %[j], %[i]     \n\t" // int i = -j;          // = (b < a)
+    "blsi %[j], %[i]          \n\t" // int i = -j;          // = (b < a)
     "cmp %[a], %[c]           \n\t" // flag = c < a;
     "adc $0, %[i]             \n\t" // i = i + (0 + flag);  // = (b < a) + (c < a)
     "mov %[a], (%[p],%[i],4)  \n\t" // buffer[i] = a;
