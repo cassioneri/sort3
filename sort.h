@@ -93,7 +93,7 @@ char dest[] = {
   2, 1, 9, 0, 2, 9, 1, 0
 };
 
-// Precondition: *buffer[0] >= 0 && *buffer[1] >= 0 && *buffer[2] >= 0.
+// Precondition: buffer[0] >= 0 && buffer[1] >= 0 && buffer[2] >= 0.
 void Sort3_15(int* buffer) {
   int a, b, c;
   int64_t i, j;
@@ -118,7 +118,7 @@ void Sort3_15(int* buffer) {
   return;
 }
 
-// Precondition: *buffer[0] >= 0 && *buffer[1] >= 0 && *buffer[2] >= 0.
+// Precondition: buffer[0] >= 0 && buffer[1] >= 0 && buffer[2] >= 0.
 // Faster than the Sort3_15, this implementation also does not use a look-up
 // table and thus, compiler switches "-fno-pie -no-pie" are unnecessary.
 void Sort3_15_v2(int* buffer) {
