@@ -64,6 +64,29 @@ void Sort3AlphaDev(int* buffer) {
 }
 #endif
 
+void Sort3_beat(int* buffer) {
+  asm volatile(
+      "mov 0x8(%0), %%eax            \n"
+      "cmp %%eax, 0x4(%0)            \n"
+      "mov %%eax, %%edx              \n"
+      "cmovl 0x4(%0), %%edx          \n"
+      "cmovg 0x4(%0), %%eax          \n"
+      "cmp (%0), %%eax               \n"
+      "mov %%eax, %%ecx              \n"
+      "cmovl (%0), %%eax             \n"
+      "cmovg (%0), %%ecx             \n"
+      "cmp %%ecx, %%edx              \n"
+      "cmovg %%edx,%%ecx             \n"
+      "cmovg (%0), %%edx             \n"
+      "mov %%eax, 0x8(%0)            \n"
+      "mov %%edx, (%0)               \n"
+      "mov %%ecx, 0x4(%0)            \n"
+      : "+r"(buffer)
+      :
+      : "eax", "ecx", "edx", "esi", "memory");
+}
+
+
 void Sort3_14(int* buffer) {
   int a, b, c;
   asm volatile (
@@ -92,6 +115,7 @@ char dest[] = {
   0, 0, 9, 1, 1, 9, 2, 2,
   2, 1, 9, 0, 2, 9, 1, 0
 };
+
 
 // Precondition: buffer[0] >= 0 && buffer[1] >= 0 && buffer[2] >= 0.
 void Sort3_15(int* buffer) {

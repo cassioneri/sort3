@@ -69,6 +69,16 @@ static void Sort3_14(benchmark::State& state) {
 }
 BENCHMARK(Sort3_14);
 
+static void Sort3_beat(benchmark::State& state) {
+  for (auto _ : state)
+    for (auto n : ns) {
+      auto p = test_cases[n];
+      Sort3_beat(p.data());
+      benchmark::DoNotOptimize(p.data());
+    }
+}
+BENCHMARK(Sort3_beat);
+
 static void Sort3_10(benchmark::State& state) {
   for (auto _ : state)
     for (auto n : ns) {
