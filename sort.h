@@ -191,3 +191,23 @@ void Sort3_10(int* buffer) {
     "jnz 0b"
     : : "rdi"(buffer) : "memory", "esi", "eax", "ecx");
 }
+
+// Precondition: buffer[0] >= 0 && buffer[1] >= 0 && buffer[2] >= 0.
+void Sort3_12(int* buffer) {
+  asm volatile (
+    "mov (%%rdi), %%eax;"
+    "cmp %%eax, 4(%%rdi);"
+    "sbb  %%rcx, %%rcx;"
+    "xchg %%eax, 4(%%rdi, %%rcx, 4);"
+
+    "cmp 8(%%rdi), %%eax;"
+    "sbb  %%rcx, %%rcx;"
+    "xchg %%eax, 8(%%rdi, %%rcx, 4);"
+    "mov %%eax, (%%rdi);"
+
+    "cmp 4(%%rdi), %%eax;"
+    "sbb  %%rcx, %%rcx;"
+    "xchg %%eax, 4(%%rdi, %%rcx, 4);"
+    "mov %%eax, (%%rdi);"
+    : : "rdi"(buffer) : "memory", "esi", "eax", "ecx");
+}

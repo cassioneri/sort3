@@ -55,6 +55,7 @@ void test(void (*function)(int*), char const* name) {
 int main() {
   test(Sort3AlphaDev, "Sort3AlphaDev");
   test(Sort3_10     , "Sort3_10"     );
+  test(Sort3_12     , "Sort3_12"     );
   test(Sort3_14     , "Sort3_14"     );
   test(Sort3_15     , "Sort3_15"     );
   test(Sort3_15_v2  , "Sort3_15_v2"  );
