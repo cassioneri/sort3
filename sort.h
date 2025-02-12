@@ -171,3 +171,23 @@ void Sort3_faster(int* buffer) {
 
   return;
 }
+
+
+// Bubble sort.
+void Sort3_10(int* buffer) {
+  asm volatile (
+    "mov $2, %%esi;"
+    "0: "
+    "mov %%esi, %%ecx;"
+    "mov (%%rdi, %%rsi, 4), %%eax;"
+    "1: "
+    "cmp %%eax, -4(%%rdi, %%rcx, 4);"
+    "jl 2f;"
+    "xchg %%eax, -4(%%rdi, %%rcx, 4);"
+    "2:"
+    "loop 1b;"
+    "mov %%eax, (%%rdi, %%rsi, 4);"
+    "dec %%esi;"
+    "jnz 0b"
+    : : "rdi"(buffer) : "memory", "esi", "eax", "ecx");
+}
