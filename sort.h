@@ -67,21 +67,21 @@ void Sort3AlphaDev(int* buffer) {
 // Author: Bernhard Kauer.
 void Sort3_beat(int* buffer) {
   asm volatile(
-      "mov 0x8(%0), %%eax            \n"
-      "cmp %%eax, 0x4(%0)            \n"
-      "mov %%eax, %%edx              \n"
-      "cmovl 0x4(%0), %%edx          \n"
-      "cmovg 0x4(%0), %%eax          \n"
-      "cmp (%0), %%eax               \n"
-      "mov %%eax, %%ecx              \n"
-      "cmovl (%0), %%eax             \n"
-      "cmovg (%0), %%ecx             \n"
-      "cmp %%ecx, %%edx              \n"
-      "cmovg %%edx,%%ecx             \n"
-      "cmovg (%0), %%edx             \n"
-      "mov %%eax, 0x8(%0)            \n"
-      "mov %%edx, (%0)               \n"
-      "mov %%ecx, 0x4(%0)            \n"
+      "mov 0x8(%0), %%eax    \n\t"
+      "cmp %%eax, 0x4(%0)    \n\t"
+      "mov %%eax, %%edx      \n\t"
+      "cmovl 0x4(%0), %%edx  \n\t"
+      "cmovg 0x4(%0), %%eax  \n\t"
+      "cmp (%0), %%eax       \n\t"
+      "mov %%eax, %%ecx      \n\t"
+      "cmovl (%0), %%eax     \n\t"
+      "cmovg (%0), %%ecx     \n\t"
+      "cmp %%ecx, %%edx      \n\t"
+      "cmovg %%edx,%%ecx     \n\t"
+      "cmovg (%0), %%edx     \n\t"
+      "mov %%eax, 0x8(%0)    \n\t"
+      "mov %%edx, (%0)       \n\t"
+      "mov %%ecx, 0x4(%0)        "
       : "+r"(buffer)
       :
       : "eax", "ecx", "edx", "esi", "memory");
@@ -90,22 +90,22 @@ void Sort3_beat(int* buffer) {
 void Sort3_14(int* buffer) {
   int a, b, c;
   asm volatile (
-    "mov (%[p]), %[a]           \n\t" // int a = buffer[0];
-    "mov 4(%[p]), %[b]          \n\t" // int b = buffer[1];
-    "loop_start%=:              \n\t" // for(;;) {
-    "mov %[a], %[c]             \n\t" //   int c = a;
-    "cmp %[b], %[a]             \n\t" //   bool flag = b < a;
-    "cmovg %[b], %[a]           \n\t" //   a = flag ? b : a;
-    "cmovg %[c], %[b]           \n\t" //   b = flag ? c : b;
-    "cmp 8(%[p]), %[b]          \n\t" //   flag = buffer[2] < b;
-    "jle loop_end%=             \n\t" //   if (!flag) break;
-    "mov %[b], %[c]             \n\t" //   c = b;
-    "mov 8(%[p]), %[b]          \n\t" //   b = buffer[2];
-    "mov %[c], 8(%[p])          \n\t" //   buffer[2] = c;
-    "jmp loop_start%=           \n\t" // }
-    "loop_end%=:                \n\t" //
-    "mov %[a], (%[p])           \n\t" // buffer[0] = a;
-    "mov %[b], 4(%[p])              " // buffer[1] = b;
+    "mov (%[p]), %[a]   \n\t" // int a = buffer[0];
+    "mov 4(%[p]), %[b]  \n\t" // int b = buffer[1];
+    "loop_start%=:      \n\t" // for(;;) {
+    "mov %[a], %[c]     \n\t" //   int c = a;
+    "cmp %[b], %[a]     \n\t" //   bool flag = b < a;
+    "cmovg %[b], %[a]   \n\t" //   a = flag ? b : a;
+    "cmovg %[c], %[b]   \n\t" //   b = flag ? c : b;
+    "cmp 8(%[p]), %[b]  \n\t" //   flag = buffer[2] < b;
+    "jle loop_end%=     \n\t" //   if (!flag) break;
+    "mov %[b], %[c]     \n\t" //   c = b;
+    "mov 8(%[p]), %[b]  \n\t" //   b = buffer[2];
+    "mov %[c], 8(%[p])  \n\t" //   buffer[2] = c;
+    "jmp loop_start%=   \n\t" // }
+    "loop_end%=:        \n\t" //
+    "mov %[a], (%[p])   \n\t" // buffer[0] = a;
+    "mov %[b], 4(%[p])      " // buffer[1] = b;
     : [a]"=r"(a), [b]"=r"(b), [c]"=r"(c), [p]"+r"(buffer)
     : : "memory");
 }
@@ -199,19 +199,19 @@ void Sort3_faster(int* buffer) {
 // Bubble sort.
 void Sort3_10(int* buffer) {
   asm volatile (
-    "mov $2, %%esi;"
-    "0: "
-    "mov %%esi, %%ecx;"
-    "mov (%[p], %%rsi, 4), %%eax;"
-    "1: "
-    "cmp %%eax, -4(%[p], %%rcx, 4);"
-    "jl 2f;"
-    "xchg %%eax, -4(%[p], %%rcx, 4);"
-    "2:"
-    "loop 1b;"
-    "mov %%eax, (%[p], %%rsi, 4);"
-    "dec %%esi;"
-    "jnz 0b"
+    "mov $2, %%esi                   \n\t"
+    "0:                              \n\t"
+    "mov %%esi, %%ecx                \n\t"
+    "mov (%[p], %%rsi, 4), %%eax     \n\t"
+    "1:                              \n\t"
+    "cmp %%eax, -4(%[p], %%rcx, 4)   \n\t"
+    "jl 2f                           \n\t"
+    "xchg %%eax, -4(%[p], %%rcx, 4)  \n\t"
+    "2:                              \n\t"
+    "loop 1b                         \n\t"
+    "mov %%eax, (%[p], %%rsi, 4)     \n\t"
+    "dec %%esi                       \n\t"
+    "jnz 0b                              "
     : [p]"+r"(buffer) : : "memory", "esi", "eax", "ecx");
 }
 
@@ -219,19 +219,19 @@ void Sort3_10(int* buffer) {
 // Precondition: buffer[0] >= 0 && buffer[1] >= 0 && buffer[2] >= 0.
 void Sort3_12(int* buffer) {
   asm volatile (
-    "mov (%[p]), %%eax;"
-    "cmp %%eax, 4(%[p]);"
-    "sbb  %%rcx, %%rcx;"
-    "xchg %%eax, 4(%[p], %%rcx, 4);"
+    "mov (%[p]), %%eax              \n\t"
+    "cmp %%eax, 4(%[p])             \n\t"
+    "sbb  %%rcx, %%rcx              \n\t"
+    "xchg %%eax, 4(%[p], %%rcx, 4)  \n\t"
 
-    "cmp 8(%[p]), %%eax;"
-    "sbb  %%rcx, %%rcx;"
-    "xchg %%eax, 8(%[p], %%rcx, 4);"
-    "mov %%eax, (%[p]);"
+    "cmp 8(%[p]), %%eax             \n\t"
+    "sbb  %%rcx, %%rcx              \n\t"
+    "xchg %%eax, 8(%[p], %%rcx, 4)  \n\t"
+    "mov %%eax, (%[p])              \n\t"
 
-    "cmp 4(%[p]), %%eax;"
-    "sbb  %%rcx, %%rcx;"
-    "xchg %%eax, 4(%[p], %%rcx, 4);"
-    "mov %%eax, (%[p]);"
+    "cmp 4(%[p]), %%eax             \n\t"
+    "sbb  %%rcx, %%rcx              \n\t"
+    "xchg %%eax, 4(%[p], %%rcx, 4)  \n\t"
+    "mov %%eax, (%[p])                  "
     : [p]"+r"(buffer) : : "memory", "esi", "eax", "ecx");
 }
