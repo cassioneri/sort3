@@ -202,17 +202,17 @@ void Sort3_10(int* buffer) {
     "mov $2, %%esi;"
     "0: "
     "mov %%esi, %%ecx;"
-    "mov (%%rdi, %%rsi, 4), %%eax;"
+    "mov (%[p], %%rsi, 4), %%eax;"
     "1: "
-    "cmp %%eax, -4(%%rdi, %%rcx, 4);"
+    "cmp %%eax, -4(%[p], %%rcx, 4);"
     "jl 2f;"
-    "xchg %%eax, -4(%%rdi, %%rcx, 4);"
+    "xchg %%eax, -4(%[p], %%rcx, 4);"
     "2:"
     "loop 1b;"
-    "mov %%eax, (%%rdi, %%rsi, 4);"
+    "mov %%eax, (%[p], %%rsi, 4);"
     "dec %%esi;"
     "jnz 0b"
-    : : "rdi"(buffer) : "memory", "esi", "eax", "ecx");
+    : [p]"+r"(buffer) : : "memory", "esi", "eax", "ecx");
 }
 
 // Author: Bernhard Kauer.
