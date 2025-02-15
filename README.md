@@ -1,9 +1,12 @@
 # Sort3
 
-This repository contains the supplementary material to:
+This repository contains the supplementary material to the paper below with
+later [contributions](https://github.com/cassioneri/sort3/pull/1) from
+[Bernhard Kauer](https://github.com/vmmon).
 
 Neri, C. "Shorter and faster than *Sort3AlphaDev*", to appear.
 ([Preprint](https://arxiv.org/abs/2307.14503).)
+
 
 ## Introduction
 

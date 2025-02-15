@@ -64,6 +64,7 @@ void Sort3AlphaDev(int* buffer) {
 }
 #endif
 
+// Author: Bernhard Kauer.
 void Sort3_beat(int* buffer) {
   asm volatile(
       "mov 0x8(%0), %%eax            \n"
@@ -85,7 +86,6 @@ void Sort3_beat(int* buffer) {
       :
       : "eax", "ecx", "edx", "esi", "memory");
 }
-
 
 void Sort3_14(int* buffer) {
   int a, b, c;
@@ -115,7 +115,6 @@ char dest[] = {
   0, 0, 9, 1, 1, 9, 2, 2,
   2, 1, 9, 0, 2, 9, 1, 0
 };
-
 
 // Precondition: buffer[0] >= 0 && buffer[1] >= 0 && buffer[2] >= 0.
 void Sort3_15(int* buffer) {
@@ -196,7 +195,7 @@ void Sort3_faster(int* buffer) {
   return;
 }
 
-
+// Author: Bernhard Kauer.
 // Bubble sort.
 void Sort3_10(int* buffer) {
   asm volatile (
@@ -216,6 +215,7 @@ void Sort3_10(int* buffer) {
     : : "rdi"(buffer) : "memory", "esi", "eax", "ecx");
 }
 
+// Author: Bernhard Kauer.
 // Precondition: buffer[0] >= 0 && buffer[1] >= 0 && buffer[2] >= 0.
 void Sort3_12(int* buffer) {
   asm volatile (
