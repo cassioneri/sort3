@@ -54,7 +54,7 @@ so the following sentence must be added at the end of section "Shorter than
 Readers are encouraged to checkout this repository for building and running
 tests and benchmarks on their own platforms but thanks to
 [Compiler explorer](https://godbolt.org) and
-[quick-bench](https://quick-bench.com), live versions cane be seen at:
+[quick-bench](https://quick-bench.com), live versions can be seen at:
 
 1. [godbolt.org/z/3TqG6Tbjv](https://godbolt.org/z/3TqG6Tbjv);
 1. [quick-bench.com/q/ndRd9bDMaprBk-rL00CCimNMVJQ](https://quick-bench.com/q/ndRd9bDMaprBk-rL00CCimNMVJQ).
@@ -73,7 +73,7 @@ preset names have the form *compiler*.*mode*.*builder* where
 * *mode* is one of `debug`, `release` or `release-symbols`;
 * *builder* is one of `make` or `ninja`.
 
-Tip: `cmake --list-presets` shows the complete list available presets.
+Tip: `cmake --list-presets` shows the complete list of available presets.
 
 To build everything, on the top level directory, run:
 ```
@@ -87,8 +87,7 @@ Simply open the top level folder and select one of the available presets.
 
 # Executables
 
-They are created in the `build/<preset-name>/bin` directory and the
-instructions below assumes this is the current working directory.
+They are created in the `build/<preset-name>/bin`.
 
 | Name   | Description                                                   |
 |--------|---------------------------------------------------------------|
@@ -98,4 +97,4 @@ instructions below assumes this is the current working directory.
 # Dependencies
 
 [Google Benchmark](https://github.com/google/benchmark) is automatically
-downloaded and built as part of sort3's build.
+downloaded and built together with sort3.
